@@ -14,7 +14,6 @@ main.o: main.c header.h
 source.o: source.c header.h
 	$(CC) $(CFLAGS) -c source.c
 
-# Запуск с аргументами
 run: $(TARGET)
 	./$(TARGET) $(ARGS)
 
