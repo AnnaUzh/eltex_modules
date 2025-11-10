@@ -39,21 +39,21 @@ void printContact(const uint32_t contact_id, const PhoneBook *phone_book) {
       }
 
       if (phone_book->contacts[i].email_count > 0) {
-        for (int j = 0; j < phone_book->contacts[i].phone_count; j++) {
+        for (int j = 0; j < phone_book->contacts[i].email_count; j++) {
           printf("Email%d:        %s\n", j + 1,
                  phone_book->contacts[i].email[j]);
         }
       }
 
       if (phone_book->contacts[i].social_media_count > 0) {
-        for (int j = 0; j < phone_book->contacts[i].phone_count; j++) {
+        for (int j = 0; j < phone_book->contacts[i].social_media_count; j++) {
           printf("Соцсети%d:        %s\n", j + 1,
                  phone_book->contacts[i].social_media[j]);
         }
       }
 
       if (phone_book->contacts[i].messenger_count > 0) {
-        for (int j = 0; j < phone_book->contacts[i].phone_count; j++) {
+        for (int j = 0; j < phone_book->contacts[i].messenger_count; j++) {
           printf("Мессенджер%d:        %s\n", j + 1,
                  phone_book->contacts[i].messenger[j]);
         }
