@@ -4,7 +4,7 @@ void main() {
   setlocale(LC_ALL, "Russian");
 
   PhoneBook phone_book;
-  phone_book.count = 0;
+  init_phonebook(&phone_book);
 
   while (1) {
     printf("Выберите функцию для работы с таблицей\n");
@@ -38,10 +38,12 @@ void main() {
     switch (ans) {
     case 1:
       addContact(&phone_book);
+      sort_by_last_name(&phone_book);
       break;
     case 2:
       uint32_t id2 = search(&phone_book);
       edit_contact(&phone_book, id2);
+      sort_by_last_name(&phone_book);
       break;
     case 3:
       uint32_t id3 = search(&phone_book);
@@ -52,7 +54,7 @@ void main() {
       break;
     case 5:
       uint32_t id5 = search(&phone_book);
-      printContact(id5, &phone_book);
+      // printContact(id5, &phone_book);
       break;
     case 0:
       return;

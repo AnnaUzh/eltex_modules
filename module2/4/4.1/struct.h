@@ -15,7 +15,6 @@
 #define MAX_MESSENGERS 20
 #define MAX_PHONES 5
 typedef struct Contact Contact;
-// Основная структура контакта
 struct Contact{
     uint32_t id;
     char last_name[MAX_LENGTH];    // Фамилия (обязательное поле)
@@ -35,14 +34,16 @@ struct Contact{
     Contact *prev;
 };
 
-// Структура для работы с телефонной книгой
 typedef struct {
-    Contact contacts[MAX_CONTACTS]; // Массив контактов
-    int count;                      // Текущее количество контактов
+    Contact *head;           // Указатель на первый контакт
+    Contact *tail;           // Указатель на последний контакт (опционально)
+    int count;               // Количество контактов
+    uint32_t next_id;        // Следующий доступный ID
 } PhoneBook;
 
+void init_phonebook(PhoneBook *pb);
 int is_empty_or_whitespace(const char *str);
-void printContact(const uint32_t contact_id,const PhoneBook *phone_book);
+void printContact(Contact *current,const PhoneBook *phone_book);
 int addContact(PhoneBook *phone_book);
 void print_all_contacts(const PhoneBook *phone_book);
 uint32_t name_search(PhoneBook *phonebook, char target[], int len);
@@ -53,3 +54,5 @@ void read_string_with_default(const char *prompt, char *buffer, const char *defa
 int edit_contact(PhoneBook *phone_book, uint32_t contact_id);
 int is_id_exists(const PhoneBook *phone_book, int id);
 uint32_t generate_unique_id(PhoneBook *phone_book);
+void sort_by_last_name(PhoneBook *phone_book);
+void swap_contacts_data(Contact *a, Contact *b);
