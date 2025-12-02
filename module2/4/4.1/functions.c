@@ -220,6 +220,10 @@ void print_all_contacts(const PhoneBook *phone_book) {
 }
 
 uint32_t name_search(PhoneBook *phonebook, char target[], int len) {
+  if (phonebook == NULL || phonebook->head == NULL) {
+    printf("Телефонная книга пуста\n");
+    return 0;
+  }
   float max_sim = 0;
   uint32_t max_sim_contact = phonebook->head->id;
   Contact *current = phonebook->head;
@@ -246,9 +250,15 @@ uint32_t name_search(PhoneBook *phonebook, char target[], int len) {
   return max_sim_contact;
 }
 uint32_t last_name_search(PhoneBook *phone_book, char target[], int len) {
+  if (phone_book == NULL || phone_book->head == NULL) {
+    printf("Телефонная книга пуста\n");
+    return 0;
+  }
+Contact *current = phone_book->head;
+  printf("Проверяем контакт с id: %u\n", current->id);
   float max_sim = 0;
   uint32_t max_sim_contact = phone_book->head->id;
-  Contact *current = phone_book->head;
+  
   for (int i = 0; i < MAX_CONTACTS && current != NULL; i++, current = current->next) {
     float similar = 0, total = 0;
     for (int j = 0; current->last_name[j] != '\0'; j++) {
@@ -261,8 +271,6 @@ uint32_t last_name_search(PhoneBook *phone_book, char target[], int len) {
     }
     if (len > total)
       total = len;
-    
-    printf("%f %f\n", similar, total);
 
     if (similar == total)
       return current->id;
@@ -274,23 +282,59 @@ uint32_t last_name_search(PhoneBook *phone_book, char target[], int len) {
   return max_sim_contact;
 }
 
-Contact delete_contact(PhoneBook *phone_book, uint32_t contact_id) {
-  Contact *current = phone_book->head;
-  for (int j = 0; j < phone_book->count; j++, current = current->next) {
-    if (current->id == contact_id) {
-      Contact deleted_contact = *current;
-      if (j > 1 && j < phone_book->count - 1){
-      current->prev->next = current->next;
-      current->next->prev = current->prev;
-      }
-      else if (j <= 1) current->next->prev = NULL;
-      else if (j >= phone_book->count - 1) current->prev->next = NULL;
-      phone_book->count--;
 
-      printf("Контакт успешно удален\n");
-      return deleted_contact;
+Contact delete_contact(PhoneBook *phone_book, uint32_t contact_id) {
+    Contact deleted_contact = {0};
+    
+    if (phone_book == NULL || phone_book->head == NULL) {
+        printf("Телефонная книга пуста\n");
+        return deleted_contact;
     }
-  }
+    
+    Contact *current = phone_book->head;
+    
+    for (int j = 0; j < phone_book->count; j++) {
+        if (current->id == contact_id) {
+            deleted_contact = *current; // Сохраняем копию
+            
+            // УДАЛЕНИЕ ПЕРВОГО ЭЛЕМЕНТА
+            if (current == phone_book->head) {
+                phone_book->head = current->next;
+                if (phone_book->head != NULL) {
+                    phone_book->head->prev = NULL;
+                }
+            }
+            // УДАЛЕНИЕ ПОСЛЕДНЕГО ЭЛЕМЕНТА
+            else if (current->next == NULL) {
+                if (current->prev != NULL) {
+                    current->prev->next = NULL;
+                }
+            }
+            // УДАЛЕНИЕ ЭЛЕМЕНТА ИЗ СЕРЕДИНЫ
+            else {
+                if (current->prev != NULL) {
+                    current->prev->next = current->next;
+                }
+                if (current->next != NULL) {
+                    current->next->prev = current->prev;
+                }
+            }
+            
+            phone_book->count--;
+            printf("Контакт успешно удален\n");
+            
+            // Если список стал пустым
+            if (phone_book->count == 0) {
+                phone_book->head = NULL;
+            }
+            
+            return deleted_contact;
+        }
+        current = current->next;
+    }
+    
+    printf("Контакт с ID %u не найден\n", contact_id);
+    return deleted_contact;
 }
 
 uint32_t search(PhoneBook *phone_book) {
@@ -332,7 +376,6 @@ uint32_t search(PhoneBook *phone_book) {
       if (fgets(search_str, sizeof(search_str), stdin) == NULL) {
         break;
       }
-      
       size_t len = strlen(search_str);
       if (len > 0 && search_str[len-1] == '\n') {
         search_str[len-1] = '\0';
