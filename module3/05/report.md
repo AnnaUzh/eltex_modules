@@ -6,10 +6,10 @@
 
 ## Код для проверки
 ```
-# SIGINT (обычно Ctrl+C в терминале)
+# SIGINT (Ctrl+C)
 kill -SIGINT <PID>
 
-# SIGQUIT (обычно Ctrl+\ в терминале)
+# SIGQUIT (Ctrl+\)
 kill -SIGQUIT <PID>
 
 # SIGABRT
@@ -18,16 +18,16 @@ kill -SIGABRT <PID>
 # SIGTERM
 kill -SIGTERM <PID>
 
-# SIGTSTP (приостановка, обычно Ctrl+Z)
+# SIGTSTP (Ctrl+Z)
 kill -SIGTSTP <PID>
 
-# SIGSTOP (нельзя перехватить)
+# SIGSTOP
 kill -SIGSTOP <PID>
 
-# SIGCONT (продолжение после остановки)
+# SIGCONT
 kill -SIGCONT <PID>
 
-# SIGKILL (нельзя перехватить или игнорировать)
+# SIGKILL
 kill -SIGKILL <PID> 
 ```
 
@@ -48,26 +48,26 @@ gcc -o myprogram program.c
 ![sigint_1](images/sigint_1.png)  
 ![sigint_3](images/sigint_3.png)  
 
-* SIGQUIT (3): Будет обработан, записано сообщение в файл, но не повлияет на счетчик SIGINT.  
+* SIGQUIT: Будет обработан, записано сообщение в файл, но не повлияет на счетчик SIGINT.  
 ![sigquit](images/sigquit.png) 
 
 
-* SIGABRT (6): Не обрабатывается явно, поэтому завершит программу.  
+* SIGABRT: Не обрабатывается явно, поэтому завершит программу.  
 ![sigarbt](images/sigarbt.png)
 
-* SIGTERM (15): Не обрабатывается явно, поэтому завершит программу.  
+* SIGTERM: Не обрабатывается явно, поэтому завершит программу.  
 ![sigterm_terminal](images/sigterm_terminal.png)  
 ![sigterm_program](images/sigterm_program.png)  
 
-* SIGTSTP (20): Игнорируется программой (но вообще останавливает процесс).  
+* SIGTSTP: Игнорируется программой (но вообще останавливает процесс).  
 
 > Ничего не произошло
 
-* SIGSTOP (19): Немедленно приостанавливает процесс (нельзя перехватить).  
-* SIGCONT (18): Возобновляет приостановленный процесс.  
+* SIGSTOP: Немедленно приостанавливает процесс (нельзя перехватить).  
+* SIGCONT: Возобновляет приостановленный процесс.  
 ![sigstopcont](images/sigstopcont.png)    
 
 > Программа была остановлена в 21:32:15 и продолжила работать в 21:32:58
 
-* SIGKILL (9): Немедленно убивает процесс (нельзя перехватить или игнорировать).  
+* SIGKILL: Немедленно убивает процесс (нельзя перехватить или игнорировать).  
 ![sigkill](images/sigkill.png)  
