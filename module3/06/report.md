@@ -14,7 +14,7 @@ make
 
 ## Тест программ
 
-* Запустим сервер, одключимся от имени клиентов 20 и 30.
+* Запустим сервер, одключимся от имени клиентов 20 и 30.  
 ![start_server](images/start_server.png)  
 ![start_c20](images/start_c20.png)  
 ![start_c30](images/start_c30.png)  
