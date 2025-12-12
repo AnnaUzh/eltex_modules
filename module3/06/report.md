@@ -14,7 +14,7 @@ make
 
 ## Тест программ
 
-* Запустим сервер, одключимся от имени клиентов 20 и 30.  
+* Запустим сервер, подключимся от имени клиентов 20 и 30.  
 ![start_server](images/start_server.png)  
 ![start_c20](images/start_c20.png)  
 ![start_c30](images/start_c30.png)  
@@ -22,13 +22,13 @@ make
 * От имени клиента 30 было отправлено сообщение всем. Вот как это видно у клиента 20:  
 Пусть клиент 20 напишет приватное сообщение клиенту 30, а тот ему ответит.  
 
-20:
+20:  
 ![private20](images/private_c20.png)  
 
-30: 
+30:   
 ![private30](images/private_c30.png) 
 
-Вот так это видно на сервере:
+Вот так это видно на сервере:  
 ![privatese](images/private_se.png) 
 
 * Теперь покинем сервер  
@@ -39,5 +39,5 @@ make
 От имени клиента 30 зажмем Ctrl+C:  
 ![shutdown30](images/exit_c30.png)
 
-На сервере тоже зажмем Ctrl+C: 
+На сервере тоже зажмем Ctrl+C:  
 ![shutdown_server](images/exit_serv.png) 
