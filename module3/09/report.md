@@ -12,4 +12,4 @@ gcc semaphore.c
 ./a.out
 ```
 - Запуск  
-![Запуск программы](images/works.png)  
+![Запуск программы](works.png)  
