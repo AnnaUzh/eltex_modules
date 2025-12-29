@@ -12,5 +12,5 @@ gcc client_chat.c -o client
 ```
 - Демонстрация работы
 На скриншотах представлен чат от имени каждого клиента.  
-![client 1](client1.png)   
-![client 2](client2.png)  
+![client 1](images/client1.png)   
+![client 2](images/client2.png)  
