@@ -19,7 +19,7 @@
 
 volatile sig_atomic_t stop_sniffing = 0;
 
-// Структура для заголовка пакета
+// Структура для ip-заголовка пакета
 struct ip_header {
     unsigned char ihl:4;
     unsigned char version:4;

@@ -30,8 +30,6 @@ void* receive(void* socket1) {
             printf("Введите сообщение: ");
             fflush(stdout);
         }
-        
-        usleep(10000);
     }
     
     return NULL;
