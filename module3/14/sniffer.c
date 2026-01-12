@@ -17,8 +17,6 @@
 #define PORTS_COUNT 2
 #define TARGET_PORTS {9090, 9091}
 
-volatile sig_atomic_t stop_sniffing = 0;
-
 // Структура для ip-заголовка пакета
 struct ip_header {
     unsigned char ihl:4;
@@ -34,10 +32,13 @@ struct ip_header {
     unsigned int daddr;
 };
 
+void analyze_dump(const char *filename);
+
 // Обработчик сигнала для корректного завершения
 void handle_signal(int sig) {
-    stop_sniffing = 1;
     printf("\nЗавершение работы сниффера...\n");
+    analyze_dump("packet_dump.bin");
+    exit(0);
 }
 
 // Функция для записи дампа пакета в бинарный файл
@@ -50,7 +51,7 @@ void dump_packet_to_file(FILE *dump_file, const unsigned char *buffer, int size)
 // Функция для записи лога в текстовый файл
 void log_packet_to_file(FILE *log_file, const struct ip_header *ip_hdr, 
                        const struct udphdr *udp_hdr, 
-                       const char *payload, int payload_len,
+                       char *payload, int payload_len,
                        const char *timestamp) {
     fprintf(log_file, "Время: %s\n", timestamp);
 
@@ -61,13 +62,8 @@ void log_packet_to_file(FILE *log_file, const struct ip_header *ip_hdr,
     fprintf(log_file, "Длина данных: %d байт\n", payload_len);
     
     if (payload_len > 0) {
-        fprintf(log_file, "Данные (ASCII): ");
-        for (int i = 0; i < payload_len && i < 100; i++) {
-            if (payload[i] >= 32 && payload[i] <= 126)
-                fprintf(log_file, "%c", payload[i]);
-            else
-                fprintf(log_file, ".");
-        }
+        payload[payload_len] = 0;
+        fprintf(log_file, "Данные (ASCII): %s", payload);
         fprintf(log_file, "\n");
     }
     fprintf(log_file, "--------------------------\n");
@@ -112,15 +108,9 @@ void analyze_dump(const char *filename) {
         int data_length = packet_size - (ip_header_len + sizeof(struct udphdr));
         if (data_length > 0) {
             char *data = (char *)(packet + ip_header_len + sizeof(struct udphdr));
+            data[data_length] = 0;
             
-            printf("  Данные (%d байт): ", data_length);
-            for (int i = 0; i < data_length && i < 50; i++) {
-                if (data[i] >= 32 && data[i] <= 126)
-                    printf("%c", data[i]);
-                else
-                    printf(".");
-            }
-            printf("\n");
+            printf("  Данные (%d байт): %s\n", data_length, data);
         }
         
         free(packet);
@@ -133,7 +123,7 @@ void analyze_dump(const char *filename) {
 // Функция для вывода информации о пакете на экран
 void print_packet_info(const struct ip_header *ip_hdr, 
                       const struct udphdr *udp_hdr, 
-                      const char *payload, int payload_len,
+                      char *payload, int payload_len,
                       const char *timestamp) {
     
     printf("Время: %s\n", timestamp);
@@ -142,15 +132,8 @@ void print_packet_info(const struct ip_header *ip_hdr,
     printf("Размер данных: %d байт\n", payload_len);
     
     if (payload_len > 0) {
-        printf("Сообщение: ");
-        for (int i = 0; i < payload_len; i++) {
-            if (payload[i] >= 32 && payload[i] <= 126)
-                printf("%c", payload[i]);
-            else if (payload[i] == '\n' || payload[i] == '\r')
-                printf(" ");
-            else
-                printf(".");
-        }
+        payload[payload_len] = 0;
+        printf("Сообщение: %s", payload);
         printf("\n");
     }
 }
@@ -195,7 +178,7 @@ int main() {
         return 1;
     }
     
-    while (!stop_sniffing) {
+    while (1) {
         struct sockaddr_in saddr;
         socklen_t saddr_size = sizeof(saddr);
         int packet_size;
@@ -249,17 +232,11 @@ int main() {
         log_packet_to_file(log_file, ip_hdr, udp_hdr, payload, data_length, timestamp);
         
         print_packet_info(ip_hdr, udp_hdr, payload, data_length, timestamp);
-        
-        usleep(1000);
     }
-
-    
     
     close(raw_socket);
     fclose(dump_file);
     fclose(log_file);
-    
-    analyze_dump("packet_dump.bin");
     
     return 0;
 }
